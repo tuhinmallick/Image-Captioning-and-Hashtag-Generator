@@ -33,7 +33,7 @@ def caption_generator(des):
     2.
     3.
     ''')
-    
+
     # Caption generation
     response = openai.Completion.create(
     engine = openai_model,
@@ -43,9 +43,8 @@ def caption_generator(des):
     stop = None,
     temperature = 0.7,
     )
-    
-    caption = response.choices[0].text.strip().split("\n") 
-    return(caption)
+
+    return response.choices[0].text.strip().split("\n")
 
 
 def hashtag_generator(des):
@@ -56,7 +55,7 @@ def hashtag_generator(des):
     Hashtags:
     #[Hashtag1] #[Hashtag2] #[Hashtag3] #[Hashtag4] #[Hashtag5] #[Hashtag6] #[Hashtag7] #[Hashtag8] #[Hashtag9] #[Hashtag10]
     ''')
-    
+
     # Hashtag Generation
     response = openai.Completion.create(
     engine = openai_model,
@@ -66,9 +65,8 @@ def hashtag_generator(des):
     stop = None,
     temperature = 0.7,
     )
-    
-    hashtag = response.choices[0].text.strip().split("\n") 
-    return(hashtag)
+
+    return response.choices[0].text.strip().split("\n")
 
 
 def prediction(img_list):
@@ -138,21 +136,18 @@ def upload():
     with st.form("uploader"):
         # Image input 
         image = st.file_uploader("Upload Images",accept_multiple_files=True,type=["jpg","png","jpeg"])
-        # Generate button
-        submit = st.form_submit_button("Generate")
-        
-        if submit:  # submit condition 
+        if submit := st.form_submit_button("Generate"):
             description = prediction(image)
-            
+
             st.subheader("Description for the Image:")
-            for i,caption in enumerate(description):
+            for caption in description:
                 st.write(caption)
-                
+
             st.subheader("Captions for this image are:")
             captions = caption_generator(description[0]) # Function call to generate caption
             for caption in captions: # Present Captions
                 st.write(caption)
-                
+
             st.subheader("#Hashtags")
             hashtags = hashtag_generator(description[0]) # Function call to generate hashtag
             for hash in hashtags: # Present Hashtags
